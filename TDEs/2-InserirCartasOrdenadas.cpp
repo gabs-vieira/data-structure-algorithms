@@ -1,7 +1,7 @@
 // Created by gabriel on 15/03/24.
 //
 #include <stdio.h>
-#define tamanho_vetor 5
+#define tamanho_vetor 9
 //Métodos
 
 void ver_lista_cartas( int *cartas, int posicao){
