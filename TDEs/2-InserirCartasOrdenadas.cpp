@@ -1,4 +1,4 @@
-// Created by gabriel on 15/03/24.
+// Created by gabriel vieira on 15/03/24.
 //
 #include <stdio.h>
 #define tamanho_vetor 9
