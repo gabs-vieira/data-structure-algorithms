@@ -47,7 +47,7 @@ typedef struct smpnodo{
 typedef struct report{
     char num[6];
     char tag[12];
-    SMPNODO prox;
+    struct report *prox;
 }REPORT;
 
 
@@ -208,7 +208,6 @@ char* aterissa(INDEX *ini, SMPNODO **control){
     SMPNODO *aux = *control, *ant = NULL;
     INDEX *indice = ini;
     NODO *val = NULL;
-    REPORT *sup = **relatorio;
 
     if(aux == NULL){
         printf("Nenhum avião, escalado para aterrisar.");
@@ -313,10 +312,13 @@ void skip(){
     while (getchar() != '\n');
 }
 
-void add_relat(char **id, REPORT **ini, char tag[12]){
+void add_relat(char *id, REPORT **ini, char tag[12]){
     REPORT *new, *sup = *ini;
 
     new = (REPORT*)malloc(sizeof(REPORT));
+    if (new == NULL) {
+        return;
+    }
 
     strcpy(new->num, id);
     strcpy(new->tag, tag);
@@ -332,6 +334,7 @@ void add_relat(char **id, REPORT **ini, char tag[12]){
     }
     sup->prox = new;
 }
+
 
 void esc_relat(REPORT *ini) {
     REPORT *aux = ini;
@@ -425,7 +428,7 @@ int main(){
                 if (aviao != NULL){
                     printf("Avião %s foi autorizado a decolar\n", aviao);
                     (cont->deco)--;
-                    add_relat(aviao, &relat, "Aterrisagem")
+                    add_relat(aviao, &relat, "Decolagem");
                 }
                 skip();                
                 break;
