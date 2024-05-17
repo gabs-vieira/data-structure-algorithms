@@ -1,26 +1,3 @@
-/*
-TAD aeroportoEDAero {Fila FATE, FDEC; Lista LDISP, relatório de operações;
-
-Operações:
-cadastra_aviao(E: idAviao, ...): insere um avião em LDISP, ordenado pela sua identificação (ok)
-
-avioes_cadastrados( ): informa na tela quais aviões estão cadastrados(lista LDISP), cada um com sua quantidade de decolagens e de aterrissagens. 
-
-autoriza_decolar(E: idAviao): enfileira avião em FDEC; ()
-
-decolar(...): desenfileira avião de FDEC, atualizando seu número de decolagens;
-
-autoriza_aterrissar(E: idAviao): enfileira avião em FATE;
-
-aterrissar(...): desenfileira avião de FATE, atualizando seu número de aterrissagens;
-
-proximas_decolagens( ): informa na tela as próximas decolagens previstas (fila FDEC);
-
-proximas_aterrissagens( ): informa na tela as próximas aterrissagens previstas (fila FATE);
-
-relatorio_aeroporto( ): apresenta na tela um relatório com a descrição das aterrissagens e decolagens efetuadas até o momento da solicitação;
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -269,7 +246,7 @@ char* decola(INDEX *ini, SMPNODO **control){
     while(strcmp(aux->num,val->id) != 0){
         val = val->prox;
     }
-    val->att++;
+    val->dec++;
     if (ant != NULL) {
         ant->prox = NULL;
     } else {
@@ -370,8 +347,8 @@ int main(){
         printf("╔═══════════════════════════════════════════════╗\n");
         printf("║                    Opções                     ║\n");
         printf("╠═══════════════════════════════════════════════╣\n");
-        printf("║  1. Cadastrar nova aeronave    (ok)           ║\n");
-        printf("║  2. Escrever lista de todos os aviões   (ok)  ║\n");
+        printf("║  1. Cadastrar nova aeronave                   ║\n");
+        printf("║  2. Escrever lista de todos os aviões         ║\n");
         printf("║  3. Inserir aeronave na fila de decolagem     ║\n");
         printf("║  4. Autorizar decolagem de aeronave           ║\n");
         printf("║  5. Inserir aeronave na lista de aterrisagem  ║\n");
