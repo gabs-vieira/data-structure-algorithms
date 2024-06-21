@@ -18,7 +18,6 @@ TNoA *criaNo(char ch) {
 }
 
 
-
 //pré-fixado pré em ordem
 //Préfixo faz a leitura da raiz antes de fazer a leitura dos filhos
 void prefixa(TNoA *raiz) {
@@ -28,6 +27,16 @@ void prefixa(TNoA *raiz) {
         }
         prefixa(raiz->esq);
         prefixa(raiz->dir);
+    }
+}
+//Préfixo faz a leitura da raiz antes de fazer a leitura dos filhos
+void prefixaDireita(TNoA *raiz) {
+    if (raiz != NULL) {
+        if(raiz->esq == NULL && raiz->dir == NULL){ //Pegar as folhas
+            printf("%c", raiz->info);
+        }
+        prefixa(raiz->dir);
+        prefixa(raiz->esq);
     }
 }
 
@@ -40,7 +49,13 @@ void infixa(TNoA *raiz) {
         infixa(raiz->dir);
     }
 }
-
+void infixaDireita(TNoA *raiz) {
+    if (raiz != NULL) {
+        infixa(raiz->dir);
+        printf("%c", raiz->info);
+        infixa(raiz->esq);
+    }
+}
 
 //pós fixa faz a leitura dos filhos antes de fazer a leitura da raiz
 void posfixa(TNoA *raiz) {
@@ -48,6 +63,30 @@ void posfixa(TNoA *raiz) {
         posfixa(raiz->esq);
         posfixa(raiz->dir);
         printf("%c", raiz->info);
+    }
+}
+void posfixaDireita(TNoA *raiz) {
+    if (raiz != NULL) {
+        posfixa(raiz->dir);
+        posfixa(raiz->esq);
+        printf("%c", raiz->info);
+    }
+}
+
+
+
+//implementacao Iterativa
+//Buscar uma chave na arvore
+TNoA *busca(TNoA *no, int chave){
+    while(no == NULL){
+
+        if(no == NULL) return NULL; //Não achou, retorna NULL (ponteiro nulo
+
+        else if(no->info == chave) return no; //Achou, retorna o ponteiro para o nó
+
+        else if( no->info > chave) no = no->esq; //A chave é menor que a chave do nó, então vai para a esquerda
+
+        else no = no->dir; //A chave é maior que a chave do nó, então vai para a direita
     }
 }
 
@@ -61,6 +100,16 @@ int main(void) {
     raiz->dir->esq = criaNo('D');
     raiz->dir->dir = criaNo('E');
 
+
+
+    printf("Prefixa:\n");
     prefixa(raiz);
+    printf("\nPrefixaDireita:\n");
+    prefixaDireita(raiz);
+
+    print("Central");
+
+    print("Central Direita");
+
 
 };
