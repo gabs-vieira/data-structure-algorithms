@@ -231,7 +231,7 @@ int totalQuantidadesCatalogo(NODO *ini){
     return total;
 }
 
-
+//Função para exibir os produtos com quantidade maior que X
 void exibeCatalogoDeQuantidade(NODO *ini, int quantidade, bool maiorQue){
     while(ini != NULL){
         PRODUCT *product = ini->seed;
@@ -268,59 +268,78 @@ void prefixadoCompleto(NODO *ini){
     }
 }
 
+int menu(){
+    int opcao;
+    printf("\n----- Menu -----\n");
+    printf("1. Adicionar produto\n");
+    printf("2. Consultar produto\n");
+    printf("3. Remover produto\n");
+    printf("4. Total de produtos\n");
+    printf("5. Total de quantidades\n");
+    printf("6. Exibir catálogo\n");
+    printf("7. Exibir produtos com quantidade maior que X\n");
+    printf("8. Exibir produtos com quantidade menor ou igual a X\n");
+    printf("9. Exibir catálogo completo (prefixado)\n");
+    printf("0. Sair\n");
+    printf("Escolha uma opcao: ");
+    scanf("%d", &opcao);
+    return opcao;
+}
 
 
 int main() {
     NODO *ini = NULL;
+    
+    int opcao, quantidade;
+    char produto[50];
+    
+    while ((opcao = menu()) != 0) {
+        switch (opcao) {
+            case 1:
+                printf("Digite o nome do produto: ");
+                scanf("%s", produto);
+                printf("Digite a quantidade: ");
+                scanf("%d", &quantidade);
+                addWord(&ini, produto, quantidade);
+                break;
+            case 2:
+                printf("Digite o nome do produto para consulta: ");
+                scanf("%s", produto);
+                consultaProduto(ini, produto);
+                break;
+            case 3:
+                printf("Digite o nome do produto para remover: ");
+                scanf("%s", produto);
+                ini->seed = removeProduto(ini->seed, produto);
+                break;
+            case 4:
+                printf("Total de produtos: %d\n", totalProdutosCatalogo(ini));
+                break;
+            case 5:
+                printf("Total de quantidades de produtos: %d\n", totalQuantidadesCatalogo(ini));
+                break;
+            case 6:
+                printCatalog(ini);
+                break;
+            case 7:
+                printf("Digite a quantidade para exibir produtos com quantidade maior que: ");
+                scanf("%d", &quantidade);
+                exibeCatalogoDeQuantidade(ini, quantidade, true);
+                break;
+            case 8:
+                printf("Digite a quantidade para exibir produtos com quantidade menor ou igual a: ");
+                scanf("%d", &quantidade);
+                exibeCatalogoDeQuantidade(ini, quantidade, false);
+                break;
+            case 9:
+                prefixadoCompleto(ini);
+                break;
+            default:
+                printf("Opcao invalida!\n");
+        }
+    }
 
-    // Adicionando produtos ao catálogo
-    addWord(&ini, "Armário", 2);
-    addWord(&ini, "Arvore", 3);
-    addWord(&ini, "Palmeira", 1);
-    addWord(&ini, "Mesa", 5);
-    addWord(&ini, "Cadeira", 10);
 
-    printf("Consultando Produtos:\n");
-    // Consultando produtos
-    consultaProduto(ini, "Arvore");    // Deve encontrar e imprimir as informações do produto
-    consultaProduto(ini, "Mesa");      // Deve encontrar e imprimir as informações do produto
-    consultaProduto(ini, "Cadeira");   // Deve encontrar e imprimir as informações do produto
-    consultaProduto(ini, "Sofá");      // Não deve encontrar o produto e imprimir mensagem correspondente
-    printf("\n");
-
-
-    // Removendo um produto
-    printf("Removendo produto Arvore:\n");
-    ini->seed = removeProduto(ini->seed, "Arvore");
-    consultaProduto(ini, "Árvore");    // Não deve encontrar o produto e imprimir mensagem correspondente
-    printf("\n");
-
-
-    printf("Numero total de produtos:\n");
-    // Contando total de produtos
-    printf("Total de produtos: %d\n", totalProdutosCatalogo(ini));
-    printf("\n");
-
-
-    printf("Numero total de quantidade dos produtos:\n");
-    // Somando total de quantidades de produtos
-    printf("Total de quantidades de produtos: %d\n", totalQuantidadesCatalogo(ini));
-    printf("\n");
-
-
-    printCatalog(ini); // Imprime o catálogo de produtos
-
-    printf("\n");
-    printf("Catalogo das quantidades maiores que 5:\n");
-    exibeCatalogoDeQuantidade(ini, 5, true); // Exibe produtos com quantidade maior que 5
-    printf("\n");
-
-    printf("Catalogo das quantidades menores ou iguais a 5:\n");
-    exibeCatalogoDeQuantidade(ini, 5, false); // Exibe produtos com quantidade menor que 5
-    printf("\n");
-
-
-    prefixadoCompleto(ini); // Exibe o catálogo de produtos em ordem prefixada
 
     return 0;
 }
