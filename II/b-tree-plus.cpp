@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define GRAU_MINIMO                                         \
-    3 // Grau mínimo (define a faixa para o número de chaves)
+#define GRAU_MINIMO 3 // Grau mínimo (define a faixa para o número de chaves)
 
 typedef struct No {
     // Array de chaves
