@@ -3,15 +3,15 @@
 #include <string.h>
 
 
-typdef struct{
-    int movieId;
+typedef struct{
+    char url[256];
     char title[100];
+    int movieId;
     int releaseYear;
-    char url[100];
     int directorId;
 } Movie;
 
-typdef struct{
+typedef struct{
     int directorId;
     char name[100];
 } Director;
@@ -42,16 +42,17 @@ int readMovies(char *filename, Movie movies[]){
         char *token = strtok(line, ";");
         movies[count].movieId = atoi(token);
 
-        token = strtok(line, ";");
+        token = strtok(NULL, ";");
         strcpy(movies[count].title, token);
 
-        token = strtok(line, ";");
+        token = strtok(NULL, ";");
         movies[count].releaseYear = atoi(token);
 
-        token = strtok(line, ";");
-        strcpy(movies[count].url, token);
+        token = strtok(NULL, ";");
+        // Esse copy da segfault
+        // strcpy(movies[count].url, token);
 
-        token = strtok(line, ";");
+        token = strtok(NULL, ";");
         if(token != NULL){
             movies[count].directorId = atoi(token);
         } else {
@@ -74,11 +75,10 @@ int readDirectors(char *filename, Director directors[]){
     int count = 0;
 
     while (fgets(line, sizeof(line), file)){
-
-        char *token = strtok(line, ";");
+        char *token = strtok(line, ",");
         directors[count].directorId = atoi(token);
 
-        token = strtok(line, ";");
+        token = strtok(NULL, "");
         strcpy(directors[count].name, token);
 
         count++;
@@ -96,7 +96,7 @@ void displayMovies(Movie movies[], int numMovies){
     printf("Lista de Filmes:\n");
     for(int i = 0; i < numMovies; i++){
         printf("ID: %d | Título: %s | Ano: %d | URL: %s | Diretor ID: %d\n", 
-            movies[i].movieID, movies[i].title, movies[i].releaseYear, movies[i].url, movies[i].directorID
+            movies[i].movieId, movies[i].title, movies[i].releaseYear, movies[i].url, movies[i].directorId
         );
     }
     printf("\n");
@@ -117,8 +117,8 @@ void incompleteMovies(Movie movies[], int numMovies){
     printf("Lista de Filmes com dados Incompletos:\n");
     for(int i = 0; i < numMovies; i++){
 
-        if(movies[i].directorID == -1){
-            printf("Filme: %s (ID: %d)\n", movies[i].title, movies[i].movieID );
+        if(movies[i].directorId == -1){
+            printf("Filme: %s (ID: %d)\n", movies[i].title, movies[i].movieId );
         }
     }
     printf("\n");
@@ -130,14 +130,24 @@ void duplicateMovies(Movie movies[], int numMovies){
     for(int i = 0; i < numMovies; i++){
         for(int j = i+1; j < numMovies; j++){
             if(strcmp(movies[i].title, movies[j].title) == 0){
-                printf("Filme: %s (ID: %d)\n", movies[i].title, movies[i].movieID );
+                printf("Filme: %s (ID: %d)\n", movies[i].title, movies[i].movieId );
             }
         }
     }
     printf("\n");
 }
 
-
+void printMovieAndDirector(Movie movies[], Director directors[], int numMovies, int numDirectors)
+{
+    printf("Filmes com Diretor no banco:\n\n");
+    for (int i = 0; i < numMovies; i++)
+        for (int j = 0; j < numDirectors; j++)
+            if (movies[i].movieId == directors[j].directorId)
+            {
+                printf("Filme: %s\tDiretor: %s\n", movies[i].title, directors[i].name);
+                break;
+            }
+}
 
 int main(){
 
@@ -153,6 +163,8 @@ int main(){
 
         incompleteMovies(movies, numMovies);
         duplicateMovies(movies, numMovies);
+
+        printMovieAndDirector(movies, directors, numMovies, numDirectors);
     }
 
     return 0;
