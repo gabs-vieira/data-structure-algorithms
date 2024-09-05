@@ -51,9 +51,15 @@ int readMovies(char *filename, Movie movies[]){
         token = strtok(NULL, ";");
         // Esse copy da segfault
         // strcpy(movies[count].url, token);
+        if(token != NULL && strlen(token) > 0 ){
+            strncpy(movies[count].url, token, sizeof(movies[count].url) - 1);
+            movies[count].url[sizeof(movies[count].url) - 1] = '\0'; 
+        } else {
+            strcpy(movies[count].url, "URL não disponível");
+        }
 
         token = strtok(NULL, ";");
-        if(token != NULL){
+        if(token != NULL && strlen(token) > 0 ){
             movies[count].directorId = atoi(token);
         } else {
             movies[count].directorId = -1;
@@ -78,7 +84,7 @@ int readDirectors(char *filename, Director directors[]){
         char *token = strtok(line, ",");
         directors[count].directorId = atoi(token);
 
-        token = strtok(NULL, "");
+        token = strtok(NULL, "\n");
         strcpy(directors[count].name, token);
 
         count++;
@@ -116,10 +122,18 @@ void displayDirectors(Director directors[], int numDirectors){
 void incompleteMovies(Movie movies[], int numMovies){
     printf("Lista de Filmes com dados Incompletos:\n");
     for(int i = 0; i < numMovies; i++){
+        
 
-        if(movies[i].directorId == -1){
+        if (strlen(movies[i].title) == 0 || 
+            movies[i].releaseYear == 0 || 
+            strlen(movies[i].url) == 0 || 
+            strcmp(movies[i].url, "URL não disponível") == 0 || 
+            movies[i].directorId == -1 || 
+            movies[i].directorId == 0) {
+
             printf("Filme: %s (ID: %d)\n", movies[i].title, movies[i].movieId );
         }
+        
     }
     printf("\n");
 }
@@ -137,6 +151,7 @@ void duplicateMovies(Movie movies[], int numMovies){
     printf("\n");
 }
 
+// Mostra apenas os filmes que possuem diretor no banco
 void printMovieAndDirector(Movie movies[], Director directors[], int numMovies, int numDirectors)
 {
     printf("Filmes com Diretor no banco:\n\n");
@@ -144,13 +159,36 @@ void printMovieAndDirector(Movie movies[], Director directors[], int numMovies, 
         for (int j = 0; j < numDirectors; j++)
             if (movies[i].movieId == directors[j].directorId)
             {
-                printf("Filme: %s\tDiretor: %s\n", movies[i].title, directors[i].name);
+                printf("Filme %s (ID: %d) é dirigido por: %s\n", movies[i].title, movies[i].movieId, directors[j].name);
+
                 break;
             }
 }
 
-int main(){
 
+void checkMovieDirectorLink(Movie movies[], Director directors[], int numMovies, int numDirectors  ) {
+    printf("Verificação de vínculo entre filmes e diretores:\n");
+
+    for (int i = 0; i < numMovies; i++) {
+        int found = 0;  
+        for (int j = 0; j < numDirectors; j++) {
+            if (movies[i].directorId == directors[j].directorId) {
+                printf("Filme %s (ID: %d) é dirigido por: %s\n", movies[i].title, movies[i].movieId, directors[j].name);
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            printf("Filme %s (ID: %d) não possui vínculo com um diretor listado.\n", movies[i].title, movies[i].movieId);
+        }
+    }
+
+    printf("\n");
+}
+
+
+int main(){
     Movie movies[10000];
     Director directors[10000];
 
@@ -158,13 +196,14 @@ int main(){
     int numDirectors = readDirectors("directors.txt", directors);
 
     if(numMovies > 0 && numDirectors > 0){
-        displayMovies(movies, numMovies);
-        displayDirectors(directors, numDirectors);
+        // displayMovies(movies, numMovies);
+        // displayDirectors(directors, numDirectors);
 
-        incompleteMovies(movies, numMovies);
-        duplicateMovies(movies, numMovies);
+        // incompleteMovies(movies, numMovies);
+        // duplicateMovies(movies, numMovies);
 
-        printMovieAndDirector(movies, directors, numMovies, numDirectors);
+        checkMovieDirectorLink(movies, directors, numMovies, numDirectors);
+        // printMovieAndDirector(movies, directors, numMovies, numDirectors);
     }
 
     return 0;
